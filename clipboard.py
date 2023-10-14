@@ -20,21 +20,14 @@ def paste(selection=None):
     with open(os.devnull, 'wb') as devnull:
         pipe = subprocess.Popen(PASTE_CMD, stdout=subprocess.PIPE, stderr=devnull)
         outdata, errdata = pipe.communicate()
-    if pipe.returncode:
-        return False
-    else:
-        return outdata
+    return False if pipe.returncode else outdata
 
 def copy(text):
     with open(os.devnull, 'wb') as devnull:
         pipe = subprocess.Popen(COPY_CMD, stdin=subprocess.PIPE, stderr=devnull)
         pipe.communicate(text)
-    if pipe.returncode:
-        return False
-    else:
-        return True
+    return not pipe.returncode
 
 def paste_table():
-	text = paste()
-	data = list(csv.reader(text.split('\n'), delimiter='\t'))
-	return data
+    text = paste()
+    return list(csv.reader(text.split('\n'), delimiter='\t'))
